@@ -1,0 +1,47 @@
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'admin/css/admin_nav.css' %}">
+{% block content %}
+
+
+<body>
+    {% include 'admin/navbar.html' %} 
+    <h1 style="text-align: center;">Task List</h1>
+
+    <div class="container" style="align-items: center; display: flex; justify-content: center; align-items: center; ">
+        <table id="customers" border="1">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            {% if user.is_superuser %}
+                                Superadmin
+                            {% elif user.is_staff %}
+                                Admin
+                            {% else %}
+                                User
+                            {% endif %}
+                        </td>
+                        
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <br><br>
+    </div>
+
+</body>
+{% endblock %} 
+
+

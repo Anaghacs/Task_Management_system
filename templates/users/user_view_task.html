@@ -1,0 +1,53 @@
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'admin/css/admin_nav.css' %}">
+{% block content %}
+
+
+<body>
+    {% include 'users/navbar.html' %} 
+    <h1 style="text-align: center;">User Task List</h1>
+
+    <div class="container" style="align-items: center; display: flex; justify-content: center; align-items: center; ">
+        <table id="customers" border="1">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <!-- <th>Assigned To</th> -->
+                    <th>Status</th>
+                    <th>Due Date</th>
+                    <th>Worked Hours</th>
+                    <th>Completion Report</th>
+                    <th colspan="2" id="mid">Action</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                {% for task in tasks %}
+                    <tr>
+                        <td>{{ task.title }}</td>
+                        <!-- <td>{{ task.assigned_to.username }}</td> -->
+                        <td>{{ task.status }}</td>
+                        <td>{{ task.due_date }}</td>
+                        <td>{{ task.worked_hours }}</td>
+                        <td>{{task.completion_report}}</td>
+                        <td>
+                            <a href="{% url 'update_user_task' task.id %}"><button id="up" style="background-color: blue;">Update</button></a>
+                        </td>
+                        
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5">No tasks found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <br><br>
+    </div>
+
+</body>
+{% endblock %} 
+
+

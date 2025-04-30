@@ -1,0 +1,37 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'admin/css/admin_nav.css' %}">
+{% block content %}
+{% include 'admin/navbar.html' %} 
+
+<h2 style="text-align: center;">Completion Reports</h2>
+<table border="1" style="margin: auto;">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Assigned To</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Worked Hours</th>
+            <th>Completion Report</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        {% for task in tasks %}
+            {% if task.status == "Completed" %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.assigned_to.username }}</td>
+                <td>{{ task.due_date }}</td>
+                <td>{{ task.status }}</td>
+                <td>{{ task.worked_hours }}</td>
+                <td>{{ task.completion_report }}</td>
+            </tr>
+            {% endif %}
+        {% empty %}
+        <tr><td colspan="6">No completion reports available.</td></tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+{% endblock %}

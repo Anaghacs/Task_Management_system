@@ -1,0 +1,14 @@
+<nav class="navbar">
+    <div class="navdiv">
+        <div class="logo">
+            <a href="#">Welcome admin: <span style="color: brown;">'{{ request.user.username }}'</span></a>
+        </div>
+        <ul>
+            <li><a href="{% url 'add_task' %}">Add Task</a></li>
+            <li><a href="{% url 'view_tasks' %}">View Task</a></li>
+            <li><a href="{% url 'completion_reports' %}">Completion Report</a></li>
+            <li><a href="{% url 'admin_view_users' %}">View Users</a></li>
+            <li><a href="{% url 'logout' %}">LogOut</a></li>
+        </ul>
+    </div>
+</nav>

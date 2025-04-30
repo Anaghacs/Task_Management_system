@@ -1,0 +1,12 @@
+<!-- templates/superadmin/navbar.html -->
+<nav class="navbar">
+    <div class="navdiv">
+        <div class="logo">
+            <a href="#">Welcome User: <span style="color: brown;">'{{ request.user.username }}'</span></a>
+        </div>
+        <ul>
+            <li><a href="{% url 'user_tasks' %}">View Task</a></li>
+            <li><a href="{% url 'logout' %}">LogOut</a></li>
+        </ul>
+    </div>
+</nav>

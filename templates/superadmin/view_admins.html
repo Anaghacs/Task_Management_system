@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin List</title>
+    <!-- {% load static %} -->
+    <!-- Uncomment and link your CSS if you have one -->
+    <!-- <link rel="stylesheet" href="{% static 'style.css' %}"> -->
+</head>
+<body  style="display: flex; justify-content: center; align-items: center; min-height: 50vh; margin: 0; ">
+    
+    <div class="container" style="align-items: center;">
+        <h1 style="text-align: center;">Admin List</h1>
+        
+        {% if messages %}
+        <div class="alert alert-success">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <table id="customers" border="1">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th colspan="2" id="mid">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for admin in admins %}
+                    <tr>
+                        <td>{{ admin.username }}</td>
+                        <td>{{ admin.email }}</td>
+                        <td>{{ admin.is_superuser|yesno:"Superadmin,Admin" }}</td>
+                        <td>
+                            <a href="{% url 'update_admin' admin.id %}"><button id="up" style="background-color: blue;">Update</button></a>
+                        </td>
+                        <td>
+                            <a href="{% url 'delete_admin' admin.id %}"><button id="del" style="background-color: rgb(218, 41, 41);">Delete</button></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <br><br>
+    </div>
+
+</body>
+</html>
