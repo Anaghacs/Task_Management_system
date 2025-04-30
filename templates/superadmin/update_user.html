@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Admin</title>
     {% load static %}
+    <link rel="stylesheet" href="{% static 'admin/css/admin_nav.css' %}">
     <!-- Uncomment and link your CSS if you have one -->
     <!-- <link rel="stylesheet" href="{% static 'style.css' %}"> -->
     <style>
@@ -90,21 +91,15 @@
         }
     </style>
 </head>
+
 <body>
+    <!-- {% include 'superuser/navbar.html' %} -->
+
 
     <div class="container">
         <h1>Update User</h1>
 
-        <!-- Display Success and Error Messages -->
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
 
-        <!-- Admin Update Form -->
         <form method="POST">
             {% csrf_token %}
             <div class="form-group">
@@ -130,7 +125,6 @@
         </form>
 
         <br>
-        <!-- Back to Admin List Button -->
         <a href="{% url 'view_users' %}">
             <button class="btn" style="background-color: #f44336;">Back to User List</button>
         </a>

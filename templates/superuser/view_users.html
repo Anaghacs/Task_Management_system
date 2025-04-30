@@ -1,29 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users List</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'admin/css/admin_nav.css' %}">
-    <!-- Uncomment and link your CSS if you have one -->
-    <!-- <link rel="stylesheet" href="{% static 'style.css' %}"> -->
-</head>
-{% include 'superuser/navbar.html' %} <br>
 
-<body  style="display: flex; justify-content: center; align-items: center; min-height: 50vh; margin: 0; ">
-    <div class="container" style="align-items: center;">
-        <h1 style="text-align: center;">Users List</h1>
+{% load static %}
+<link rel="stylesheet" href="{% static 'admin/css/admin_nav.css' %}">
+{% block content %}
+
+
+<body>
+    {% include 'superuser/navbar.html' %} 
+    <h1 style="text-align: center;">Users List</h1>
+
+    <div class="container" style="align-items: center; display: flex; justify-content: center; align-items: center; ">
         <table id="customers" border="1">
             <thead>
                 <tr>
                     <th>Username</th>
                     <th>Email</th>
                     <th>Role</th>
-                    <th colspan="2" id="mid">Action</th>
                 </tr>
             </thead>
+            
             <tbody>
                 {% for user in users %}
                     <tr>
@@ -38,13 +32,13 @@
                                 User
                             {% endif %}
                         </td>
-                        <!-- <td>{{ user.is_superuser|yesno:"Superadmin,Admin" }}</td> Displaying role based on is_superuser -->
                         <td>
                             <a href="{% url 'update_user' user.id %}"><button id="up" style="background-color: blue;">Update</button></a>
                         </td>
                         <td>
                             <a href="{% url 'delete_user' user.id %}"><button id="del" style="background-color: rgb(218, 41, 41);">Delete</button></a>
                         </td>
+                        
                     </tr>
                 {% endfor %}
             </tbody>
@@ -54,4 +48,6 @@
     </div>
 
 </body>
-</html>
+{% endblock %} 
+
+

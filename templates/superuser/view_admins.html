@@ -1,0 +1,44 @@
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'admin/css/admin_nav.css' %}">
+{% block content %}
+
+
+<body>
+    {% include 'superuser/navbar.html' %} 
+    <h1 style="text-align: center;">Admin List</h1>
+
+    <div class="container" style="align-items: center; display: flex; justify-content: center; align-items: center; ">
+        <table id="customers" border="1">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th colspan="2" id="mid">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for admin in admins %}
+                    <tr>
+                        <td>{{ admin.username }}</td>
+                        <td>{{ admin.email }}</td>
+                        <td>{{ admin.is_superuser|yesno:"Superadmin,Admin" }}</td>
+                        <td>
+                            <a href="{% url 'update_admin' admin.id %}"><button id="up" style="background-color: blue;">Update</button></a>
+                        </td>
+                        <td>
+                            <a href="{% url 'delete_admin' admin.id %}"><button id="del" style="background-color: rgb(218, 41, 41);">Delete</button></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <br><br>
+    </div>
+
+</body>
+{% endblock %} 
+
+

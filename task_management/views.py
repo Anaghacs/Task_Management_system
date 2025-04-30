@@ -5,7 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from superadmin.models import UserProfile, Task, TaskDetails
-
+import json
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.timezone import now
 # Create your views here.
 def Homepage(request):
     return render(request, 'index.html')
@@ -38,15 +40,15 @@ def signin_view(request):
     return render(request, 'login.html')
 
 def superadmin_dashboard(request):
-    return render(request, 'superadmin_dashboard.html')
+    return render(request, 'superuser/base.html')
 
 def view_admins(request):
     admins = User.objects.filter(is_staff=True, is_superuser=False)  # Or use is_superuser=True if you want only superadmins
-    return render(request, 'superadmin/view_admins.html', {'admins': admins})
+    return render(request, 'superuser/view_admins.html', {'admins': admins})
 
 def view_users(request):
     users = User.objects.filter(is_staff=False, is_superuser=False)  # Or use is_superuser=True if you want only superadmins
-    return render(request, 'superadmin/view_users.html', {'users': users})
+    return render(request, 'superuser/view_users.html', {'users': users})
 
 @user_passes_test(lambda u: u.is_superuser)
 def add_admin_view(request):
@@ -292,6 +294,7 @@ def view_tasks(request):
 
     if user.is_superuser:
         tasks = TaskDetails.objects.all()
+        return render(request, 'superuser/view_task.html', {'tasks': tasks})
     elif user.is_staff:
         tasks = TaskDetails.objects.filter(created_by=user)
     else:
@@ -363,9 +366,82 @@ def update_user_task(request, task_id):
 def view_completion_reports(request):
     if request.user.is_superuser:
         tasks = TaskDetails.objects.all()  
+    elif request.user.is_staff:
+        tasks = TaskDetails.objects.filter(status='Completed')
     else:
         # tasks = TaskDetails.objects.all()  
 
-        tasks = TaskDetails.objects.filter(created_by = request.user)  
+        tasks = TaskDetails.objects.filter(created_by = request.user,status='Completed' )  
 
     return render(request, 'admin/task_completion_report.html', {'tasks': tasks})
+
+
+@login_required
+def api_get_user_tasks(request):
+    if request.method != 'GET':
+        return JsonResponse({'error': 'Only GET allowed'}, status=405)
+
+    tasks = TaskDetails.objects.filter(assigned_to=request.user)
+    data = list(tasks.values('id', 'title', 'description', 'status', 'due_date'))
+    return JsonResponse({'tasks': data}, status=200)
+
+
+@login_required
+def api_update_task_status(request, task_id):
+    if request.method != 'PUT':
+        return JsonResponse({'error': 'Only PUT allowed'}, status=405)
+
+    try:
+        task = TaskDetails.objects.get(id=task_id, assigned_to=request.user)
+    except TaskDetails.DoesNotExist:
+        return JsonResponse({'error': 'Task not found or not assigned to you'}, status=404)
+
+    try:
+        body = json.loads(request.body.decode('utf-8'))
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    new_status = body.get('status')
+    report = body.get('completion_report')
+    hours = body.get('worked_hours')
+
+    if new_status == 'Completed':
+        if not report or not hours:
+            return JsonResponse({'error': 'Completion report and worked hours required to complete task'}, status=400)
+        try:
+            task.status = 'Completed'
+            task.completion_report = report
+            task.worked_hours = float(hours)
+            task.completed_at = now()
+            task.save()
+        except ValueError:
+            return JsonResponse({'error': 'Worked hours must be a valid number'}, status=400)
+    else:
+        task.status = new_status
+        task.save()
+
+    return JsonResponse({'message': 'Task updated successfully'}, status=200)
+
+@login_required
+def api_task_report(request, task_id):
+    if request.method != 'GET':
+        return JsonResponse({'error': 'Only GET allowed'}, status=405)
+
+    if not (request.user.is_staff or request.user.is_superuser):
+        return JsonResponse({'error': 'Access denied'}, status=403)
+
+    try:
+        task = TaskDetails.objects.get(id=task_id)
+    except TaskDetails.DoesNotExist:
+        return JsonResponse({'error': 'Task not found'}, status=404)
+
+    if task.status != 'Completed':
+        return JsonResponse({'error': 'Task is not completed yet'}, status=400)
+
+    return JsonResponse({
+        'title': task.title,
+        'assigned_to': task.assigned_to.username,
+        'completion_report': task.completion_report,
+        'worked_hours': task.worked_hours,
+        'completed_at': task.completed_at,
+    }, status=200)
