@@ -34,7 +34,7 @@
 <body>
 	<nav class="navbar">
 		<div class="navdiv">
-			<div class="logo"><a href="#">Welcome <span style="color: brown;">'{{ request.user.username }}'</span></a></div>
+			<div class="logo"><a href="#">Welcome<span style="color: brown;">'{{ request.user.username }}'</span></a></div>
 			<ul>
                 <li><a href="{% url 'add_admin' %}">Add Admins</a></li>
 				<li><a href="{% url 'view_admins' %}">View Admins</a></li>
@@ -47,3 +47,12 @@
 	</nav>
 </body>
 </html>
+<!-- 
+<h1>welcome...</h1>
+
+{% extends 'base.html' %}
+
+{% block title %}Update Admin{% endblock %}
+
+{% block content %}
+{% endblock %} -->

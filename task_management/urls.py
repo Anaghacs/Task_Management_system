@@ -52,4 +52,8 @@ urlpatterns = [
 
     path('completion-reports/', views.view_completion_reports, name='completion_reports'),
 
+    # path('api/tasks/', views.api_get_user_tasks, name='api_get_user_tasks'),
+    # path('api/tasks/<int:task_id>/', views.api_update_task_status, name='api_update_task_status'),
+    # path('api/tasks/<int:task_id>/report/', views.api_task_report, name='api_task_report'),
+
 ]
