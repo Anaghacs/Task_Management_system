@@ -18,7 +18,7 @@
                     <th>Due Date</th>
                     <th>Worked Hours</th>
                     <th>Completion Report</th>
-                    <th colspan="2" id="mid">Action</th>
+                    <!-- <th colspan="2" id="mid">Action</th> -->
                 </tr>
             </thead>
             
@@ -31,12 +31,12 @@
                         <td>{{ task.due_date }}</td>
                         <td>{{ task.worked_hours }}</td>
                         <td>{{task.completion_report}}</td>
-                        <td>
+                        <!-- <td>
                             <a href="{% url 'update_task' task.id %}"><button id="up" style="background-color: blue;">Update</button></a>
                         </td>
                         <td>
                             <a href="{% url 'delete_task' task.id %}"><button id="del" style="background-color: rgb(218, 41, 41);">Delete</button></a>
-                        </td>
+                        </td> -->
                     </tr>
                 {% empty %}
                     <tr>
